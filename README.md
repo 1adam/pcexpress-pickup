@@ -1,7 +1,7 @@
 # pcexpress-pickup
 A script to check for available pickup times at PC Express locations
 
-### installation using a python3 virtual environment
+## Installation using a python3 virtual environment - python 3.6 or newer required
 ```bash
 $ git clone https://github.com/shmick/pcexpress-pickup
 $ python3 -m venv pcexpress-pickup/
@@ -10,150 +10,133 @@ $ source bin/activate
 $ pip install -r requirements.txt 
 ```
 
-### example output
+## Run via Docker
+```bash
+$ docker run shmick/pcexpress-pickup -p m6h2b4 3
+```
+
+## Build and run your own container
+```bash
+$ git clone https://github.com/shmick/pcexpress-pickup
+$ cd pcexpress-pickup/
+$ docker build -t pcexpress-pickup:latest .
+$ docker run pcexpress-pickup -p m6h2b4 3
+```
+
+### example output - lookup by Postal Code and (optional) Distance in KM (default 5)
+```
+$ python check_all_by_postal_code.py m5e1w6 3
+12 pickup times available at loblaw at 10 Lower Jarvis St Toronto, Ontario M5E 1Z2 approx 0 KM away
+2020-04-22 08:00:00-04:00
+<...>
+2020-04-22 19:00:00-04:00
+
+15 pickup times available at loblaw at 60 Carlton St Toronto, Ontario M5B 1L1 approx 1 KM away
+2020-04-18 11:00:00-04:00
+<...>
+2020-04-22 19:00:00-04:00
+
+36 pickup times available at loblaw at 585 Queen St W Toronto, ON M5V 2B7 approx 2 KM away
+2020-04-18 18:00:00-04:00
+<...>
+2020-04-20 11:00:00-04:00
+```
+
+### generate a report of the stores that match your postal code and search distance
+```
+$ python check_all_by_postal_code.py m5e1w6 3 report
+store: loblaw, location: 1079, address: 10 Lower Jarvis St Toronto, Ontario M5E 1Z2, approx 0 KM away
+<...>
+store: independentcitymarket, location: 0479, address: 55 Bloor St W Toronto, Ontario M4W 1A5, approx 2 KM away
+```
+
+### example output of older check.py script
 ```
 $ python check.py 
 5 pickup times available at rcss at 15900 Bayview Ave Aurora, Ontario L4G 7Y3
 2020-04-14 10:00:00-04:00
 2020-04-14 12:00:00-04:00
-2020-04-14 13:00:00-04:00
-2020-04-14 16:00:00-04:00
-2020-04-14 19:00:00-04:00
+<...>
 
 7 pickup times available at nofrills at 9325 Yonge St Richmond Hill, Ontario L4C 0A8
 2020-04-14 09:00:00-04:00
 2020-04-14 10:00:00-04:00
-2020-04-14 13:00:00-04:00
-2020-04-14 14:00:00-04:00
-2020-04-14 15:00:00-04:00
-2020-04-14 16:00:00-04:00
-2020-04-14 18:00:00-04:00
+<...>
 
 5 pickup times available at nofrills at 14800 Yonge St #162 Aurora, Ontario L4G 1N3
 2020-04-14 09:00:00-04:00
 2020-04-14 11:00:00-04:00
-2020-04-14 13:00:00-04:00
-2020-04-14 15:00:00-04:00
-2020-04-14 17:00:00-04:00
-```
-
-### example output - lookup by Postal Code and (optional) Distance in KM (default 5)
-```
-$ python check_all_by_postal_code.py A1B2C3 2
-1 pickup times available at loblaw at 2280 Dundas St W Toronto, Ontario M6R 1X3
-2020-04-18 13:00:00-04:00
-
-38 pickup times available at nofrills at 222 Lansdowne Ave Toronto, Ontario M6K 3C6
-2020-04-08 17:00:00-04:00
-2020-04-09 13:00:00-04:00
-<...>
-
-50 pickup times available at nofrills at 900 Dufferin St Toronto, Ontario M6H 4A9
-2020-04-09 13:00:00-04:00
-2020-04-09 15:00:00-04:00
 <...>
 ```
+
 
 # Notes
-https://www.pcexpress.ca/bundle.js contains a list of all pcexpress pickup locations and variety of locatio metadata. 
+https://www.pcexpress.ca/bundle.js contains a list of all pcexpress pickup locations as well as plenty of other store and location metadata. 
 
-The store locations have been extracted to locations.json
+Active stores locations have been extracted to locations.json, which is what the utility uses.
+
+The entire unfiltered location dataset has been saved to unfiltered-locations.json
 
 ### location sample data
 ```json
-[
+{
+  "locations": [
     {
-        "id": "1000",
-        "contactNumber": "4167033419",
-        "name": "Queen Street West",
-        "storeId": "1000",
-        "storeBannerId": "loblaw",
-        "locationType": "STORE",
-        "pickupType": "STORE",
-        "bufferTimeInHours": 2,
-        "partner": null,
-        "visible": true,
-        "isShoppable": true,
-        "geoPoint": {
-            "latitude": 43.647355,
-            "longitude": -79.401696
-        },
-        "address": {
-            "country": "Canada",
-            "region": "ON",
-            "town": "Toronto",
-            "line1": "585 Queen St W",
-            "line2": null,
-            "postalCode": "M5V 2B7",
-            "formattedAddress": "585 Queen St W Toronto, ON M5V 2B7"
-        },
-        "timeZone": "EST5EDT",
-        "features": []
+      "id": "0925",
+      "contactNumber": "7096430850",
+      "name": "Prince Rupert Street",
+      "storeId": "0925",
+      "storeBannerId": "dominion",
+      "locationType": "STORE",
+      "pickupType": "STORE",
+      "bufferTimeInHours": 2,
+      "partner": null,
+      "visible": true,
+      "isShoppable": true,
+      "geoPoint": {
+        "latitude": 48.546052,
+        "longitude": -58.582397
+      },
+      "address": {
+        "country": "Canada",
+        "region": "Newfoundland and Labrador",
+        "town": "Stephenville",
+        "line1": "62 Prince Rupert St",
+        "line2": null,
+        "postalCode": "A2N 3W7",
+        "formattedAddress": "62 Prince Rupert St Stephenville, Newfoundland and Labrador A2N 3W7"
+      },
+      "timeZone": "Canada/Newfoundland",
+      "features": []
     },
     {
-        "id": "1032",
-        "contactNumber": "9052941680",
-        "name": "Bullock Drive",
-        "storeId": "1032",
-        "storeBannerId": "loblaw",
-        "locationType": "STORE",
-        "pickupType": "STORE",
-        "bufferTimeInHours": 2,
-        "partner": null,
-        "visible": true,
-        "isShoppable": true,
-        "geoPoint": {
-            "latitude": 43.874193,
-            "longitude": -79.284753
-        },
-        "address": {
-            "country": "Canada",
-            "region": "Ontario",
-            "town": "Markham",
-            "line1": "200 Bullock Dr",
-            "line2": null,
-            "postalCode": "L3P 1W2",
-            "formattedAddress": "200 Bullock Dr Markham, Ontario L3P 1W2"
-        },
-        "timeZone": "EST5EDT",
-        "features": []
+      "id": "0927",
+      "contactNumber": "7096513437",
+      "name": "Laurell Road",
+      "storeId": "0927",
+      "storeBannerId": "dominion",
+      "locationType": "STORE",
+      "pickupType": "STORE",
+      "bufferTimeInHours": 2,
+      "partner": null,
+      "visible": true,
+      "isShoppable": true,
+      "geoPoint": {
+        "latitude": 48.949657,
+        "longitude": -54.60071
+      },
+      "address": {
+        "country": "Canada",
+        "region": "Newfoundland and Labrador",
+        "town": "Gander",
+        "line1": "100 Laurell Rd",
+        "line2": null,
+        "postalCode": "A1V 2V5",
+        "formattedAddress": "100 Laurell Rd Gander, Newfoundland and Labrador A1V 2V5"
+      },
+      "timeZone": "Canada/Newfoundland",
+      "features": []
     }
-]   
-```
-
-
-### Activate locations and store banners
-
-```json
-activeLocations: [
-                    "loblaw",
-                    "superstore",
-                    "nofrills",
-                    "fortinos",
-                    "independent",
-                    "zehrs",
-                    "independentcitymarket",
-                    "rass",
-                    "dominion",
-                    "provigo",
-                    "maxi",
-                    "valumart",
-                    "wholesaleclub"
-                ]
-```
-
-```                       
-rass: {key: "rass",label: "Atlantic SuperStore",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-dominion: {key: "dominion",label: "Dominion Stores in Newfoundland and Labrador",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-fortinos: {key: "fortinos",label: "Fortinos",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-independent: {key: "independent",label: "Your Independent Grocer",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-loblaw: {key: "loblaw",label: "Loblaws",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-provigo: {key: "provigo",label: "Provigo",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-superstore: {key: "superstore",label: "Real Canadian Superstore",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-valumart: {key: "valumart",label: "Valu-mart",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-zehrs: {key: "zehrs",label: "Zehrs",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-maxi: {key: "maxi",label: "Maxi",value:!0,activeOn: "Tues, 05 June 2018 4:00:00 UTC"
-nofrills: {key: "nofrills",label: "No Frills",value:!0,activeOn: "Tues, 05 June 2018 4:00:00 UTC"
-independentcitymarket: {key: "independentcitymarket",label: "City Market",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
-wholesaleclub: {key: "wholesaleclub",label: "Wholesale Club",value:!0,activeOn: "Sat, 01 Jan 2000 00:00:00 UTC"
+  ]
+}
 ```
